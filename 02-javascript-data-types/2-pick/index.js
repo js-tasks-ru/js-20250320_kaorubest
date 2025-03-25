@@ -5,7 +5,7 @@
  * @returns {object} - returns the new object
  */
 export const pick = (obj, ...fields) => {
-    let newObj = {};
+    const newObj = {};
     Object.entries(obj).forEach(([key, value]) => {
         if (fields.indexOf(key) !== -1) {
             newObj[key] = value;
