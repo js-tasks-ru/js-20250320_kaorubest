@@ -5,13 +5,11 @@
  */
 export function createGetter(path) {
     const propNames = path.split('.');
-    const size = propNames.length;
     return (obj) => {
-        for (let i=0; i<size; i++) {
-            const prop = propNames[i];
-            if (prop in obj && Object.hasOwn(obj, prop)) {
-                obj = obj[prop];
-            } else return undefined
+        for (const propName of propNames) {
+            if (propName in obj && Object.hasOwn(obj, propName)) {
+                obj = obj[propName];
+            } else return;
         }
         return obj;
     }
