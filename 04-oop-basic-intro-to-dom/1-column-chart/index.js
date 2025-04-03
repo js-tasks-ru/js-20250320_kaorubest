@@ -58,15 +58,20 @@ export default class ColumnChart {
     createElement() {
         const element = document.createElement('div');
         element.innerHTML = this.createTemplate();
-        element.setAttribute('class', this.data.length === 0 && this.loaderClassName);
+        element.setAttribute('class', this.data.length > 0 ? '' : this.loaderClassName);
         return element;
     }
 
-    remove() {
-        this.element = null;
+    update(newData) {
+        this.data = newData;
+        this.element = this.createElement();
     }
 
-    destroy() {}
+    destroy() {
+        this.remove();
+    }
 
-    update() {}
+    remove() {
+        this.element.remove();
+    }
 }
