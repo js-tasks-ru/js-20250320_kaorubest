@@ -24,19 +24,26 @@ export default class ColumnChart {
         <div class="column-chart" style="--chart-height: 50">
             <div class="column-chart__title">
                 Total ${this.label}
-                <a href="${this.link}" class="column-chart__link">View all</a>
+                ${this.createLinkTemplate()}
             </div>
             <div class="column-chart__container">
                 <div data-element="header" class="column-chart__header">${this.formatHeading(this.value)}</div>
                 <div data-element="body" class="column-chart__chart">
-                    ${this.createDataGraph(this.data)}
+                    ${this.createChartTemplate(this.data)}
                 </div>
             </div>
         </div>
         `
     }
 
-    createDataGraph(data) {
+    createLinkTemplate() {
+        if (this.link) {
+            return `<a href="${this.link}" class="column-chart__link">View all</a>`
+        }
+        return '';
+    }
+
+    createChartTemplate(data) {
         const columnProps = this.getColumnProps(data);
         return columnProps.map(({ value, percent }) =>
             `<div style="--value: ${value}" data-tooltip="${percent}"></div>`
@@ -58,8 +65,10 @@ export default class ColumnChart {
     createElement() {
         const element = document.createElement('div');
         element.innerHTML = this.createTemplate();
-        element.setAttribute('class', this.data.length > 0 ? '' : this.loaderClassName);
-        return element;
+
+        const { firstElementChild } = element;
+        firstElementChild.classList.add(this.loaderClassName);
+        return firstElementChild;
     }
 
     update(newData) {
