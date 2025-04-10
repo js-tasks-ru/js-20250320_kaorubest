@@ -2,7 +2,8 @@ export default class SortableTable {
   constructor(config = [], data = []) {
       this.config = config;
       this.data = data;
-      this.element = this.createElement();
+      this.element = this.createElement(this.createTemplate());
+
       this.subElements = {};
       this.selectSubElements();
   }
@@ -45,9 +46,9 @@ export default class SortableTable {
       )).join('');
   }
 
-  createElement() {
+  createElement(template) {
     const element = document.createElement('div');
-    element.innerHTML = this.createTemplate();
+    element.innerHTML = template;
 
     const { firstElementChild } = element;
     return firstElementChild;
@@ -74,24 +75,24 @@ export default class SortableTable {
   }
 
   sort(field, order) {
-    const sortMultiplier = order === 'desc' ? -1 : 1;
-    const sortType = this.config.find(columnConfig => columnConfig.id === field).sortType;
+    const cellIndex = this.config.findIndex(obj => obj.id === field);
+    const sortType = this.config[cellIndex].sortType;
+    const sortable = this.config[cellIndex].sortable;
 
-    const sortFn = sortType === 'number' ?
-      this.sortNumFn(field, sortMultiplier) : 
-      this.sortStrFn(field, sortMultiplier)
+    if (!sortable) {
+      return;
+    }
 
-      this.data = this.data.sort(sortFn);
+    const k = order === 'desc' ? -1 : 1;
+    if (sortType === 'number') {
+      this.data.sort((a, b) => k * (a[field] - b[field]));
+    }
+    if (sortType === 'string') {
+      this.data.sort((a, b) => k * a[field].localeCompare(b[field], ['ru', 'en'], { caseFirst: 'upper' }));
+    }
 
     this.element.querySelector('[data-element="body"]').innerHTML = this.createTableBodyTemplate();
-  }
-
-  sortStrFn(field, sortMultiplier) {
-    return (a, b) => sortMultiplier * a[field].localeCompare(b[field], ['ru', 'en'], { caseFirst: 'upper' });
-  }
-
-  sortNumFn(field, sortMultiplier) {
-    return (a, b) => sortMultiplier * (a[field] - b[field]);
+    this.selectSubElements();
   }
 
   remove() {
