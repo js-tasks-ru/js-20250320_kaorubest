@@ -67,7 +67,7 @@ export default class SortableTableV2 extends SortableTable {
     super.sort(field, order);
   }
 
-  sortOnServer() {
+  sortOnServer(field, order) {
   }
 
   sort(field, order) {

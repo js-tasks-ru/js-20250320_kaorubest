@@ -3,13 +3,13 @@ import ColumnChart from '../../04-oop-basic-intro-to-dom/1-column-chart/index.js
 const BACKEND_URL = 'https://course-js.javascript.ru';
 
 export default class ColumnChartV2 extends ColumnChart {
-    constructor({ data, label, link, value, url = '/',
+    constructor({ data, label, link, value, url = '',
         range = {
             from: new Date(), to: new Date()    
         },
     } = {}) {
         super({ data, label, value, link });
-        this.url = `${BACKEND_URL}/${url}`;
+        this.url = new URL(`${BACKEND_URL}/${url}`);
 
         const { from, to } = range;
         this.from = from;
@@ -31,25 +31,25 @@ export default class ColumnChartV2 extends ColumnChart {
             this.element.classList.add(this.loaderClassName);
             const data = await this.fetchData(from, to);
             super.update(Object.values(data));
-            this.element.classList.remove(this.loaderClassName);
             return data;
         } catch (err) {
-            this.element.classList.remove(this.loaderClassName);
             throw new Error(err);
+        } finally {
+            this.element.classList.remove(this.loaderClassName);
         }
     }
 
     async fetchData(from, to) {
         try {
-            const response = await fetch(
-                `${this.url}?${new URLSearchParams({
-                    from: from.toISOString(),
-                    to: to.toISOString()
-                })}`
-            );
+            this.url.searchParams.append('from', from.toISOString());
+            this.url.searchParams.append('to', to.toISOString())
+            const response = await fetch(this.url.toString());
             return await response.json();
         } catch(err) {
             throw new Error(err);
+        } finally {
+            this.url.searchParams.delete('from');
+            this.url.searchParams.delete('to');
         }
     }
 }
