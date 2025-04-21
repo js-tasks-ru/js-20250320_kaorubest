@@ -28,6 +28,8 @@ export default class SortableTableV3 extends SortableTableV2 {
 
     // Добавляем бесконечный скролл только если данные загружаются с сервера
     if (!this.isSortLocally) this.addScrollListeners();
+
+    this.loadData();
   }
 
   addScrollListeners() {
