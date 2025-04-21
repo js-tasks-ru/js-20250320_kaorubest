@@ -56,7 +56,7 @@ export default class SortableTableV3 extends SortableTableV2 {
 
     if (!this.shouldLoad) return [];
     // Добавляем лоадер и GET параметры
-    this.#appendSortParams(id, order);
+    this.appendSortParams(id, order);
     this.element.classList.add('sortable-table_loading');
 
     // fetch данных
@@ -66,7 +66,7 @@ export default class SortableTableV3 extends SortableTableV2 {
     this.isLoading = false;
     // Удаляем лоадер и GET параметры
     this.element.classList.remove('sortable-table_loading');
-    this.#removeSortParams();
+    this.removeSortParams();
 
     // Если получили пустой массив, значит достигли конца и больше не подгружаем
     if (data.length === 0) {
@@ -96,7 +96,7 @@ export default class SortableTableV3 extends SortableTableV2 {
     this.loadData(id, order)
   }
 
-  #appendSortParams(id, order) {
+  appendSortParams(id, order) {
     const start = this.start;
     this.url.searchParams.append('_sort', id);
     this.url.searchParams.append('_order', order);
@@ -104,7 +104,7 @@ export default class SortableTableV3 extends SortableTableV2 {
     this.url.searchParams.append('_end', start + ITEMS_PER_PAGE);
   }
 
-  #removeSortParams() {
+  removeSortParams() {
     this.url.searchParams.delete('_sort');
     this.url.searchParams.delete('_order');
     this.url.searchParams.delete('_start');
