@@ -23,11 +23,11 @@ export default class SortableTable {
   }
 
   createTableBodyCellTemplate(product, columnConfig) {
-      if (columnConfig.template) {
-          return columnConfig.template(product);
-      }
-      const fieldId = columnConfig['id'];
-      return `<div class="sortable-table__cell">${product[fieldId]}</div>`;
+    const fieldId = columnConfig["id"];
+    if (columnConfig.template) {
+      return columnConfig.template(product[fieldId]);
+    }
+    return `<div class="sortable-table__cell">${product[fieldId]}</div>`;
   }
 
   createTableBodyRowTemplate(product) {
