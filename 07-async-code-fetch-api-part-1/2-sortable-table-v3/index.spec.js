@@ -60,6 +60,10 @@ describe('async-code-fetch-api-part-1/sortable-table-v3', () => {
       }
     });
 
+    // without next, isLoading is true after sync call of constructor() above
+    // and loadData is not being called
+    sortableTable.isLoading = false;
+
     document.body.append(sortableTable.element);
   });
 
